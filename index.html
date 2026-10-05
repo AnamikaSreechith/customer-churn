@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Customer Churn Prediction</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Background -->
+    <div class="page-background">
+      <div class="container">
+        <!-- HEADER -->
+        <header class="hero">
+          <div class="hero-icon">
+            <span>↗</span>
+          </div>
+
+          <div>
+            <p class="eyebrow">MACHINE LEARNING • CUSTOMER ANALYTICS</p>
+
+            <h1>Customer Churn Prediction</h1>
+
+            <p class="subtitle">
+              Predict whether a customer is likely to churn using
+              <strong>XGBoost</strong>.
+            </p>
+          </div>
+        </header>
+
+        <!-- MODEL INFO -->
+        <section class="model-card">
+          <div class="model-item">
+            <span class="model-icon">⚡</span>
+
+            <div>
+              <span class="model-label">MODEL</span>
+              <strong>XGBoost Classifier</strong>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="model-item">
+            <span class="model-icon">◎</span>
+
+            <div>
+              <span class="model-label">TASK</span>
+              <strong>Binary Classification</strong>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="model-item">
+            <span class="model-icon">◉</span>
+
+            <div>
+              <span class="model-label">OUTPUT</span>
+              <strong>Churn Probability</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- RESULT -->
+        {% if result %}
+
+        <section
+          class="result-card {% if 'Churn' in result.label %}danger{% else %}success{% endif %}"
+        >
+          <div class="result-icon">
+            {% if 'Churn' in result.label %} ! {% else %} ✓ {% endif %}
+          </div>
+
+          <div class="result-content">
+            <span class="result-label"> PREDICTION RESULT </span>
+
+            <h2>{{ result.label }}</h2>
+
+            <p>
+              Estimated churn probability:
+              <strong>{{ result.probability }}</strong>
+            </p>
+          </div>
+        </section>
+
+        {% endif %} {% if error %}
+
+        <div class="error-card">
+          <strong>Prediction Error</strong>
+          <p>{{ error }}</p>
+        </div>
+
+        {% endif %}
+
+        <!-- FORM CARD -->
+        <form method="POST">
+          <!-- CUSTOMER PROFILE -->
+          <section class="form-section">
+            <div class="section-heading">
+              <div class="section-number">01</div>
+
+              <div>
+                <h2>Customer Profile</h2>
+
+                <p>Basic information about the customer</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label>Gender</label>
+
+                <select name="gender">
+                  <option>Female</option>
+                  <option>Male</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Senior Citizen</label>
+
+                <select name="SeniorCitizen">
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Partner</label>
+
+                <select name="Partner">
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Dependents</label>
+
+                <select name="Dependents">
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Tenure</label>
+
+                <div class="input-with-unit">
+                  <input
+                    type="number"
+                    name="tenure"
+                    min="0"
+                    value="12"
+                    required
+                  />
+
+                  <span>months</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Phone Service</label>
+
+                <select name="PhoneService">
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- SERVICES -->
+          <section class="form-section">
+            <div class="section-heading">
+              <div class="section-number">02</div>
+
+              <div>
+                <h2>Services & Features</h2>
+
+                <p>Customer subscription and service details</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label>Multiple Lines</label>
+
+                <select name="MultipleLines">
+                  <option>No</option>
+                  <option>Yes</option>
+                  <option>No phone service</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Internet Service</label>
+
+                <select name="InternetService">
+                  <option>DSL</option>
+                  <option>Fiber optic</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Online Security</label>
+
+                <select name="OnlineSecurity">
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>No internet service</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Online Backup</label>
+
+                <select name="OnlineBackup">
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>No internet service</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Device Protection</label>
+
+                <select name="DeviceProtection">
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>No internet service</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Tech Support</label>
+
+                <select name="TechSupport">
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>No internet service</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Streaming TV</label>
+
+                <select name="StreamingTV">
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>No internet service</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Streaming Movies</label>
+
+                <select name="StreamingMovies">
+                  <option>Yes</option>
+                  <option>No</option>
+                  <option>No internet service</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- BILLING -->
+          <section class="form-section">
+            <div class="section-heading">
+              <div class="section-number">03</div>
+
+              <div>
+                <h2>Contract & Billing</h2>
+
+                <p>Customer contract and payment information</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label>Contract</label>
+
+                <select name="Contract">
+                  <option>Month-to-month</option>
+                  <option>One year</option>
+                  <option>Two year</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Paperless Billing</label>
+
+                <select name="PaperlessBilling">
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div class="field full-width">
+                <label>Payment Method</label>
+
+                <select name="PaymentMethod">
+                  <option>Electronic check</option>
+
+                  <option>Mailed check</option>
+
+                  <option>Bank transfer (automatic)</option>
+
+                  <option>Credit card (automatic)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Monthly Charges</label>
+
+                <div class="input-with-unit">
+                  <span class="prefix">$</span>
+
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="MonthlyCharges"
+                    value="70"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Total Charges</label>
+
+                <div class="input-with-unit">
+                  <span class="prefix">$</span>
+
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="TotalCharges"
+                    value="840"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- PREDICT BUTTON -->
+          <div class="prediction-area">
+            <button type="submit" class="predict-btn">
+              <span>Predict Customer Churn</span>
+
+              <span class="arrow">→</span>
+            </button>
+
+            <p class="prediction-note">
+              The model will analyze the customer information and estimate the
+              probability of churn.
+            </p>
+          </div>
+        </form>
+
+        <!-- FOOTER -->
+
+        <footer>
+          <div>
+            <strong>Customer Churn Prediction</strong>
+            <span> • Machine Learning Project</span>
+          </div>
+
+          <span> Random Forest & XGBoost </span>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
